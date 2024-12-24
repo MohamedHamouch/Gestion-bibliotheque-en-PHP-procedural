@@ -1,8 +1,6 @@
 <?php
-// Include the database connection
-include 'db.php';
+require 'configdb.php';
 
-// Check if the form is submitted
 if ($_SERVER["REQUEST_METHOD"] == "POST") {
     $titre = trim($_POST['titre']);
     $auteur = trim($_POST['auteur']);
@@ -10,18 +8,18 @@ if ($_SERVER["REQUEST_METHOD"] == "POST") {
     $date_ajout = $_POST['date_ajout'];
     $disponible = isset($_POST['disponible']) ? 1 : 0;
 
-    $stmt = $conn->prepare("INSERT INTO livres (titre, auteur, categorie, date_ajout, disponible) 
-                            VALUES (?, ?, ?, ?, ?)");
+    $stmt = mysqli_prepare($conn, "INSERT INTO livres (titre, auteur, categorie, date_ajout, disponible) 
+                                   VALUES (?, ?, ?, ?, ?)");
 
-    $stmt->bind_param("ssssi", $titre, $auteur, $categorie, $date_ajout, $disponible);
+    mysqli_stmt_bind_param($stmt, "ssssi", $titre, $auteur, $categorie, $date_ajout, $disponible);
 
-    if ($stmt->execute()) {
+    if (mysqli_stmt_execute($stmt)) {
         echo "Livre ajouté avec succès!";
     } else {
-        echo "Erreur lors de l'ajout du livre: " . $stmt->error;
+        echo "Erreur lors de l'ajout du livre: " . mysqli_stmt_error($stmt);
     }
 
-    $stmt->close();
+    mysqli_stmt_close($stmt);
     mysqli_close($conn);
 }
 ?>
