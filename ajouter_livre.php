@@ -1,5 +1,6 @@
 <?php
-require 'configdb.php';
+
+require 'db.php';
 
 if ($_SERVER["REQUEST_METHOD"] == "POST") {
     $titre = trim($_POST['titre']);
